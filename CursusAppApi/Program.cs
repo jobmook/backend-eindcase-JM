@@ -1,8 +1,16 @@
+using CursusApp.Backend.DataAccess;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+builder.Services.AddDbContext<CursusDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("CursusDbContext"));
+}, ServiceLifetime.Transient);
 
 builder.Services.AddCors(options =>
 {
