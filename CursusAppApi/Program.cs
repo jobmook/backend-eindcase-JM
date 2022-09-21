@@ -1,4 +1,5 @@
 using CursusApp.Backend.DataAccess;
+using CursusApp.Backend.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,9 @@ builder.Services.AddDbContext<CursusDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("CursusDbContext"));
 }, ServiceLifetime.Transient);
+
+builder.Services.AddTransient<CursusRepository>();
+builder.Services.AddTransient<CursusInstantieRepository>();
 
 builder.Services.AddCors(options =>
 {
