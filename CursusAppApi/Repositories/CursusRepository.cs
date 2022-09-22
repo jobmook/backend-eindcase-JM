@@ -31,12 +31,7 @@ namespace CursusApp.Backend.Repositories
 
         public async Task<List<Cursus>> GetAll()
         {
-            List<Cursus> cursussen =  await _context.Cursussen.Include(x => x.CursusInstanties).ToListAsync();
-            foreach (var item in cursussen)
-            {
-                Console.WriteLine(item);
-            }
-            return cursussen;
+            return await _context.Cursussen.Include(x => x.CursusInstanties).ToListAsync();
         }
     }
 }

@@ -15,13 +15,10 @@ namespace CursusApp.Backend.Repositories
 
         public async Task<CursusInstantie> Create(string startdatum, int cursusId)
         {
-            CursusInstantie newCursusInstantie = new CursusInstantie { Startdatum = startdatum, CursusId = cursusId};
+            CursusInstantie newCursusInstantie = new CursusInstantie { Startdatum = DateTime.Parse(startdatum), CursusId = cursusId};
             _context.CursusInstanties.Add(newCursusInstantie);
             await _context.SaveChangesAsync();
             return newCursusInstantie;
         }
-
-      
-
     }
 }
