@@ -1,10 +1,11 @@
 ﻿using CursusApp.Backend.DataAccess;
+using CursusApp.Backend.Interfaces;
 using CursusApp.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CursusApp.Backend.Repositories
 {
-    public class CursusRepository
+    public class CursusRepository : ICursusRepository
     {
         private readonly CursusDbContext _context;
 
@@ -32,6 +33,13 @@ namespace CursusApp.Backend.Repositories
         public async Task<List<Cursus>> GetAll()
         {
             return await _context.Cursussen.Include(x => x.CursusInstanties).ToListAsync();
+        }
+
+        public async Task RemoveAll()
+        {
+            var cursussen = await _context.Cursussen.Include(x => x.CursusInstanties).ToListAsync();
+            _context.RemoveRange(cursussen);
+            await _context.SaveChangesAsync();
         }
     }
 }

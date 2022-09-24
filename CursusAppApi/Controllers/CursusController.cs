@@ -1,4 +1,5 @@
 ﻿using CursusApp.Backend.Dtos;
+using CursusApp.Backend.Interfaces;
 using CursusApp.Backend.Repositories;
 using CursusApp.Core.Models;
 using Microsoft.AspNetCore.Http;
@@ -12,10 +13,10 @@ namespace CursusApp.Backend.Controllers
     [ApiController]
     public class CursusController : ControllerBase
     {
-        private readonly CursusRepository _cursusRepository;
-        private readonly CursusInstantieRepository _cursusInstantieRepository;
+        private readonly ICursusRepository _cursusRepository;
+        private readonly ICursusInstantieRepository _cursusInstantieRepository;
 
-        public CursusController(CursusRepository cursusRepository, CursusInstantieRepository cursusInstantieRepository)
+        public CursusController(ICursusRepository cursusRepository, ICursusInstantieRepository cursusInstantieRepository)
         {
             _cursusRepository = cursusRepository;
             _cursusInstantieRepository = cursusInstantieRepository;
@@ -46,7 +47,7 @@ namespace CursusApp.Backend.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(CursusDto[] cursusDtos)
         {
-            if (cursusDtos == null) return BadRequest();
+            if (cursusDtos == null || cursusDtos.Length == 0) return BadRequest();
 
             int nieuweCursussenToegevoegd = 0;
             int nieuweCursusInstantiesToegevoegd = 0;
@@ -57,15 +58,33 @@ namespace CursusApp.Backend.Controllers
                 if (cursus == null) nieuweCursussenToegevoegd++;
                 cursus ??= await _cursusRepository.Create(cursusDto.Titel, cursusDto.Cursuscode, cursusDto.Duur);
 
-                nieuweCursusInstantiesToegevoegd++;
-                var nieuweCursusInstantie = await _cursusInstantieRepository.Create(cursusDto.Startdatum, cursus.Id);
+                var nieuweCurusInstantie = await _cursusInstantieRepository.Get(cursus.Id, cursusDto.Startdatum);
+                if (nieuweCurusInstantie == null)
+                {
+                    nieuweCursusInstantiesToegevoegd++;
+                }
+                nieuweCurusInstantie ??= await _cursusInstantieRepository.Create(cursus.Id, cursusDto.Startdatum);
             }
             FeedbackDto feedbackResponse = new FeedbackDto();
-            feedbackResponse.duplicaten = 0;
+            feedbackResponse.duplicaten = cursusDtos.Length - nieuweCursusInstantiesToegevoegd;
             feedbackResponse.cursusInstantieToevoeging = nieuweCursusInstantiesToegevoegd;
             feedbackResponse.cursusToevoeging = nieuweCursussenToegevoegd;
-
             return Ok(feedbackResponse);
+        }
+
+        [HttpGet]
+        [Route("remove-all-entries")]
+        public async Task<ActionResult> RemoveAll()
+        {
+            try
+            {
+                await _cursusRepository.RemoveAll();
+                return Ok("Alle cursussen en gerelateerde cursusintanties zijn verwijderd.");
+            }
+            catch{
+                return BadRequest();
+            }
+            
         }
     }
 }

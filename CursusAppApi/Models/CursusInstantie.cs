@@ -12,7 +12,7 @@ namespace CursusApp.Core.Models
     {
         public int Id { get; set; }
 
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:d}")]
+        [DisplayFormat(DataFormatString = "{0:d}")]
         public DateTime Startdatum { get; set; }
 
         public int CursusId { get; set; }

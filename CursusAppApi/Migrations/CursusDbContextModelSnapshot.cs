@@ -45,7 +45,7 @@ namespace CursusApp.Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cursussen");
+                    b.ToTable("Cursussen", (string)null);
                 });
 
             modelBuilder.Entity("CursusApp.Core.Models.CursusInstantie", b =>
@@ -66,7 +66,7 @@ namespace CursusApp.Backend.Migrations
 
                     b.HasIndex("CursusId");
 
-                    b.ToTable("CursusInstanties");
+                    b.ToTable("CursusInstanties", (string)null);
                 });
 
             modelBuilder.Entity("CursusApp.Core.Models.CursusInstantie", b =>
