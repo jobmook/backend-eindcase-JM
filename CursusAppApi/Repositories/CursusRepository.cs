@@ -35,6 +35,7 @@ namespace CursusApp.Backend.Repositories
             return await _context.Cursussen.Include(x => x.CursusInstanties).ToListAsync();
         }
 
+        // deprecated
         public async Task RemoveAll()
         {
             var cursussen = await _context.Cursussen.Include(x => x.CursusInstanties).ToListAsync();

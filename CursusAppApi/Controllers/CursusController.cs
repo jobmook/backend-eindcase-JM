@@ -22,22 +22,6 @@ namespace CursusApp.Backend.Controllers
             _cursusInstantieRepository = cursusInstantieRepository;
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult> Post(CursusDto cursusDto)
-        //{
-        //    if(cursusDto == null)
-        //    {
-        //        return BadRequest();
-        //    } else
-        //    {
-        //        var nieuweCursus = await _cursusRepository.Create(cursusDto.Titel, cursusDto.Cursuscode, cursusDto.Duur);
-        //        Console.WriteLine("een nieuwe cursus gemaakt!");
-        //        var nieuweCursusInstantie = await _cursusInstantieRepository.Create(cursusDto.Startdatum, nieuweCursus.Id);
-        //        Console.WriteLine("Een nieuwe cursusinstantie gemaakt!");
-        //        return Ok();
-        //    }
-        //}
-
         [HttpGet]
         public async Task<IEnumerable<Cursus>> GetAll()
         {
@@ -69,6 +53,7 @@ namespace CursusApp.Backend.Controllers
             return Ok(feedbackResponse);
         }
 
+        // deprecated
         [HttpGet]
         [Route("remove-all-entries")]
         public async Task<ActionResult> RemoveAll()
