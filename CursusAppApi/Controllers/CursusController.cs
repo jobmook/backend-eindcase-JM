@@ -47,7 +47,7 @@ namespace CursusApp.Backend.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(CursusDto[] cursusDtos)
         {
-            if (cursusDtos == null || cursusDtos.Length == 0) return BadRequest();
+            if (cursusDtos is null || cursusDtos.Length == 0) return BadRequest();
 
             int nieuweCursussenToegevoegd = 0;
             int nieuweCursusInstantiesToegevoegd = 0;
@@ -55,14 +55,11 @@ namespace CursusApp.Backend.Controllers
             foreach (var cursusDto in cursusDtos)
             {
                 var cursus = await _cursusRepository.GetByCursusCode(cursusDto.Cursuscode);
-                if (cursus == null) nieuweCursussenToegevoegd++;
+                if (cursus is null) nieuweCursussenToegevoegd++;
                 cursus ??= await _cursusRepository.Create(cursusDto.Titel, cursusDto.Cursuscode, cursusDto.Duur);
 
                 var nieuweCurusInstantie = await _cursusInstantieRepository.Get(cursus.Id, cursusDto.Startdatum);
-                if (nieuweCurusInstantie == null)
-                {
-                    nieuweCursusInstantiesToegevoegd++;
-                }
+                if (nieuweCurusInstantie is null) nieuweCursusInstantiesToegevoegd++;
                 nieuweCurusInstantie ??= await _cursusInstantieRepository.Create(cursus.Id, cursusDto.Startdatum);
             }
             FeedbackDto feedbackResponse = new FeedbackDto();
